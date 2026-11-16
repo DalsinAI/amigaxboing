@@ -58,9 +58,10 @@ package. It fetches upstream at the commit package/xboing.lock names,
 applies amiga/patches, builds with amiga/Makefile.amigaos and packs
 XBoing-VERSION-68040.lha and the GFOpenUp part Parts/XBoing.
 
-Host test: `sh tests/host/test_paths.sh` builds upstream's paths.c with
+Host tests: `sh tests/host/test_paths.sh` builds upstream's paths.c with
 the Amiga patch on the host and checks every path it gives is in the
-drawer.
+drawer; `sh tests/host/test_image_decoder.sh` checks the image decoder
+hint is set on AmigaOS only, before SDL_Init and the pictures.
 
 
 What was changed
@@ -69,6 +70,12 @@ What was changed
 - amiga/patches/0001-paths-amigaos.patch (src/paths.c): the data are in
   PROGDIR:Data, the player's files in PROGDIR:User; no $HOME, XDG tree or
   shared score board.
+- amiga/patches/0002-image-decoder-amigaos.patch (src/game_init.c): the
+  pictures are decoded by SDL2_image's own 68k decoder (hint
+  SDL_IMAGE_DECODER cpu). XBoing reads about 280 small PNGs at start-up;
+  sent one by one to the services card's cores they took minutes on a
+  busy Cradle, decoded here they take seconds. SetEnv SDL_IMAGE_DECODER
+  auto gives the cores back.
 - amiga/amiga_compat.c: getpwuid, setegid, issetugid and flock, which
   libnix doesn't have, each doing what it does for an ordinary user.
 - amiga/amiga_start.c: 256 KB of stack, the $VER string, PROGDIR:User
