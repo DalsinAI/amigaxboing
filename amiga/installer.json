@@ -1,0 +1,14 @@
+{
+  "name": "XBoing",
+  "version": "1.0.12-gfos1",
+  "drawer": "XBoing",
+  "program": "XBoing",
+  "cpu": "68040",
+  "fpu": true,
+  "space": 4500000,
+  "modules": ["SDL2.module", "SDL2_image.module", "SDL2_mixer.module"],
+  "keep": ["User"],
+  "parent": "Work:Games",
+  "badge": "icons/art/xboing.png",
+  "script": "Install-XBoing"
+}

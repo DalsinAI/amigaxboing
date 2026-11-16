@@ -1,0 +1,34 @@
+XBoing: the keys
+================
+
+The mouse moves the paddle; any mouse button launches the ball and fires
+bullets. G switches between the mouse and the keys (or start with -keys).
+
+In a game:
+
+  Space         launch the ball         K          shoot
+  Left or J     paddle left             Right or L paddle right
+  P             pause, and go on        T          tilt the board
+  D             lose the ball in play
+  Z             save the game           X          load the saved game
+  Esc           end the game
+
+On the title and attract screens:
+
+  H             high scores (Shift H your own)
+  S             visual effects on or off
+  W             the starting level
+  C             the next attract screen
+  1 to 9        game speed (9 is fastest)
+
+Any time:
+
+  A             sound on or off         + and -    louder, quieter
+  I             window or full screen
+  E             the level editor
+  Q             quit
+
+The keys every AmiCradle game has on Right Amiga (GFOpenUp's SDL2.module):
+Right Amiga + F window or full screen, + P pause, + Q quit, + M free the
+mouse pointer, + S a screenshot in the drawer's Screenshots, and Help
+shows this file.

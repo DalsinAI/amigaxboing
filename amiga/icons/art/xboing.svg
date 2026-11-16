@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- XBoing's GlowIcon art: a wall of bricks, the proton ball and the paddle.
+     The AmiCradle Team's own drawing. -->
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1b2a6b"/><stop offset="1" stop-color="#060b24"/>
+    </linearGradient>
+    <linearGradient id="pad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f4f7ff"/><stop offset="0.5" stop-color="#9aa6c8"/><stop offset="1" stop-color="#4b5577"/>
+    </linearGradient>
+    <radialGradient id="ball" cx="0.35" cy="0.35" r="0.65">
+      <stop offset="0" stop-color="#ffffff"/><stop offset="0.45" stop-color="#ffd84a"/><stop offset="1" stop-color="#c25400"/>
+    </radialGradient>
+  </defs>
+  <rect x="6" y="6" width="116" height="116" rx="10" fill="url(#bg)" stroke="#0a0f2e" stroke-width="3"/>
+  <g stroke="#000" stroke-opacity="0.45" stroke-width="1.5">
+    <rect x="14" y="16" width="30" height="12" rx="2" fill="#e23b3b"/>
+    <rect x="49" y="16" width="30" height="12" rx="2" fill="#e23b3b"/>
+    <rect x="84" y="16" width="30" height="12" rx="2" fill="#e23b3b"/>
+    <rect x="14" y="31" width="30" height="12" rx="2" fill="#f39c1f"/>
+    <rect x="49" y="31" width="30" height="12" rx="2" fill="#f39c1f"/>
+    <rect x="84" y="31" width="30" height="12" rx="2" fill="#f39c1f"/>
+    <rect x="14" y="46" width="30" height="12" rx="2" fill="#3fbf4a"/>
+    <rect x="84" y="46" width="30" height="12" rx="2" fill="#3fbf4a"/>
+    <rect x="14" y="61" width="30" height="12" rx="2" fill="#3a8ef0"/>
+  </g>
+  <g fill="#fff" fill-opacity="0.35">
+    <rect x="16" y="18" width="26" height="3"/><rect x="51" y="18" width="26" height="3"/><rect x="86" y="18" width="26" height="3"/>
+    <rect x="16" y="33" width="26" height="3"/><rect x="51" y="33" width="26" height="3"/><rect x="86" y="33" width="26" height="3"/>
+    <rect x="16" y="48" width="26" height="3"/><rect x="86" y="48" width="26" height="3"/><rect x="16" y="63" width="26" height="3"/>
+  </g>
+  <path d="M60 52 L72 80" stroke="#ffd84a" stroke-opacity="0.5" stroke-width="3" stroke-dasharray="3 4"/>
+  <circle cx="74" cy="86" r="9" fill="url(#ball)" stroke="#5a2600" stroke-width="1.5"/>
+  <rect x="40" y="102" width="52" height="11" rx="5.5" fill="url(#pad)" stroke="#20263d" stroke-width="2"/>
+</svg>
