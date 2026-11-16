@@ -144,7 +144,7 @@ index 6d2ff8a..06979d5 100644
      return HIGHSCORE_IO_OK;
  }
 diff --git a/src/sdl2_cursor.c b/src/sdl2_cursor.c
-index e306c01..e6b5d01 100644
+index e306c01..9553800 100644
 --- a/src/sdl2_cursor.c
 +++ b/src/sdl2_cursor.c
 @@ -6,6 +6,13 @@
@@ -161,7 +161,17 @@ index e306c01..e6b5d01 100644
  
  #include <stdlib.h>
  #include <string.h>
-@@ -141,6 +148,7 @@ sdl2_cursor_status_t sdl2_cursor_set(sdl2_cursor_t *ctx, sdl2_cursor_id_t id)
+@@ -123,7 +130,9 @@ void sdl2_cursor_destroy(sdl2_cursor_t *ctx)
+     {
+         if (ctx->cursors[i] != NULL)
+         {
++            XBT("free cursor %d", i);
+             SDL_FreeCursor(ctx->cursors[i]);
++            XBT("freed cursor %d", i);
+         }
+     }
+ 
+@@ -141,6 +150,7 @@ sdl2_cursor_status_t sdl2_cursor_set(sdl2_cursor_t *ctx, sdl2_cursor_id_t id)
          return SDL2CUR_ERR_INVALID_ID;
      }
  
@@ -169,7 +179,7 @@ index e306c01..e6b5d01 100644
      if (id == SDL2CUR_NONE)
      {
          SDL_ShowCursor(SDL_DISABLE);
-@@ -154,6 +162,7 @@ sdl2_cursor_status_t sdl2_cursor_set(sdl2_cursor_t *ctx, sdl2_cursor_id_t id)
+@@ -154,6 +164,7 @@ sdl2_cursor_status_t sdl2_cursor_set(sdl2_cursor_t *ctx, sdl2_cursor_id_t id)
          SDL_ShowCursor(SDL_ENABLE);
      }
  
