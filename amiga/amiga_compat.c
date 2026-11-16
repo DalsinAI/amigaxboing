@@ -35,3 +35,17 @@ int flock(int fd, int op)
 	(void)op;
 	return 0;
 }
+
+/* Lab only: one line per step, appended to PROGDIR:User/trace.txt and
+   closed each time so it can be read while the game runs. */
+#include <stdio.h>
+#include <time.h>
+void xb_trace(const char *what)
+{
+    FILE *f = fopen("PROGDIR:User/trace.txt", "a");
+    if (f != NULL)
+    {
+        fprintf(f, "%lu %s\n", (unsigned long)clock(), what);
+        fclose(f);
+    }
+}
