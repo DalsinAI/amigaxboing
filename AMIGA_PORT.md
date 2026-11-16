@@ -61,7 +61,10 @@ XBoing-VERSION-68040.lha and the GFOpenUp part Parts/XBoing.
 Host tests: `sh tests/host/test_paths.sh` builds upstream's paths.c with
 the Amiga patch on the host and checks every path it gives is in the
 drawer; `sh tests/host/test_image_decoder.sh` checks the image decoder
-hint is set on AmigaOS only, before SDL_Init and the pictures.
+hint is set on AmigaOS only, before SDL_Init and the pictures;
+`sh tests/host/test_cursors.sh` builds the patched cursor code as for
+AmigaOS and checks no system cursor is made and only the editor's two
+bitmaps are freed.
 
 
 What was changed
@@ -76,6 +79,11 @@ What was changed
   sent one by one to the services card's cores they took minutes on a
   busy Cradle, decoded here they take seconds. SetEnv SDL_IMAGE_DECODER
   auto gives the cores back.
+- amiga/patches/0003-cursors-amigaos.patch (src/sdl2_cursor.c): the
+  pointers without a bitmap of their own (wait, hand, arrow) are the
+  Workbench pointer, SDL's default cursor. SDL2.module's SDL_FreeCursor
+  never returned for a system cursor, so quitting hung; the editor's
+  plus and skull pointers are XBoing's own bitmaps, as before.
 - amiga/amiga_compat.c: getpwuid, setegid, issetugid and flock, which
   libnix doesn't have, each doing what it does for an ordinary user.
 - amiga/amiga_start.c: 256 KB of stack, the $VER string, PROGDIR:User
