@@ -1,5 +1,62 @@
+diff --git a/src/game_init.c b/src/game_init.c
+index 22e9540..d3cc40f 100644
+--- a/src/game_init.c
++++ b/src/game_init.c
+@@ -15,6 +15,7 @@
+  */
+ 
+ #include "game_init.h"
++extern void xb_trace(const char *);
+ #include "game_callbacks.h"
+ #include "game_modes.h"
+ #include "game_render.h"
+@@ -772,6 +773,7 @@ void game_destroy(game_ctx_t *ctx)
+         return;
+ 
+     /* Phase 5: UI sequencers (reverse order) */
++    xb_trace("destroy highscore_system_destroy");
+     highscore_system_destroy(ctx->highscore_display);
+     dialogue_system_destroy(ctx->dialogue);
+     keys_system_destroy(ctx->keys);
+@@ -780,6 +782,7 @@ void game_destroy(game_ctx_t *ctx)
+     presents_system_destroy(ctx->presents);
+ 
+     /* Phase 4: Game systems (reverse order) */
++    xb_trace("destroy editor_system_destroy");
+     editor_system_destroy(ctx->editor);
+     message_system_destroy(ctx->message);
+     eyedude_system_destroy(ctx->eyedude);
+@@ -794,19 +797,28 @@ void game_destroy(game_ctx_t *ctx)
+     block_system_destroy(ctx->block);
+ 
+     /* Phase 3: State + loop */
++    xb_trace("destroy sdl2_loop_destroy");
+     sdl2_loop_destroy(ctx->loop);
+     sdl2_state_destroy(ctx->state);
+ 
+     /* Phase 2: SDL2 platform (reverse order) */
++    xb_trace("destroy sdl2_cursor_destroy");
+     sdl2_cursor_destroy(ctx->cursor);
++    xb_trace("destroy sdl2_input_destroy");
+     sdl2_input_destroy(ctx->input);
++    xb_trace("destroy sdl2_audio_destroy");
+     sdl2_audio_destroy(ctx->audio);
++    xb_trace("destroy sdl2_font_destroy");
+     sdl2_font_destroy(ctx->font);
++    xb_trace("destroy sdl2_texture_destroy");
+     sdl2_texture_destroy(ctx->texture);
++    xb_trace("destroy sdl2_renderer_destroy");
+     sdl2_renderer_destroy(ctx->renderer);
+ 
++    xb_trace("destroy SDL_Quit");
+     SDL_Quit();
+ 
++    xb_trace("destroy done");
+     free(ctx);
+ }
+ 
 diff --git a/src/game_main.c b/src/game_main.c
-index 6828d6c..420e00c 100644
+index 6828d6c..1a4f31c 100644
 --- a/src/game_main.c
 +++ b/src/game_main.c
 @@ -87,6 +87,7 @@ int main(int argc, char *argv[])
@@ -10,6 +67,14 @@ index 6828d6c..420e00c 100644
          /* Mark start of frame for edge-triggered input */
          sdl2_input_begin_frame(ctx->input);
  
+@@ -146,6 +147,7 @@ int main(int argc, char *argv[])
+         sdl2_loop_update(ctx->loop, elapsed);
+     }
+ 
++    { extern void xb_trace(const char *); xb_trace("loop end"); }
+     game_destroy(ctx);
+     return EXIT_SUCCESS;
+ }
 diff --git a/src/game_modes.c b/src/game_modes.c
 index 855b7db..3535e68 100644
 --- a/src/game_modes.c
