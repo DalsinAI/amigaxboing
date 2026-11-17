@@ -18,6 +18,7 @@ XB      ?= ../xboing-c
 STOVE   ?= $(HOME)/AmiCradle/stoves/os32-gcc16-open6
 PREFIX  ?= $(STOVE)/prefix
 SDL2KIT ?= $(PREFIX)/m68k-amigaos
+LICDIR  = $(firstword $(wildcard $(SDL2KIT)/share/GFOpenGPU-SDK/Licences $(SDL2KIT)/share/OpenGPU-SDK/Licences))
 CC      = $(PREFIX)/bin/m68k-amigaos-gcc
 STRIP   = $(PREFIX)/bin/m68k-amigaos-strip
 CPU     ?= -m68040 -m68881
@@ -64,7 +65,7 @@ package: $(OUT)/$(PROG) AMIGA_PORT.md amiga/Licences.txt amiga/Controls
 	cp $(XB)/original/COPYRIGHT $(OUT)/COPYRIGHT-1996.txt
 	cp amiga/Licences.txt $(OUT)/Licences.txt
 	mkdir -p $(OUT)/Licences
-	cp $(SDL2KIT)/share/GFOpenGPU-SDK/Licences/SDL2_ttf.txt $(SDL2KIT)/share/GFOpenGPU-SDK/Licences/FreeType-FTL.txt $(OUT)/Licences/
+	cp $(LICDIR)/SDL2_ttf.txt $(LICDIR)/FreeType-FTL.txt $(OUT)/Licences/
 	cp amiga/icons/XBoing.info amiga/icons/ReadMe.info $(OUT)/
 	for f in LICENSE.txt COPYRIGHT-1996.txt Licences.txt Controls; do \
 	    cp amiga/icons/ReadMe.info $(OUT)/$$f.info; done
