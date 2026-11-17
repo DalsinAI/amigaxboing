@@ -1,0 +1,58 @@
+--- a/src/game_modes.c
++++ b/src/game_modes.c
+@@ -15,10 +15,21 @@
+ #include <string.h>
+ #include <time.h>
+ 
++#ifndef __amigaos__
+ #include <pwd.h>
+ #include <unistd.h>
++#endif
+ 
+ #include <SDL2/SDL.h>
++/* AmigaOS is single-user for the purposes of this local high-score record. */
++static unsigned long xboing_user_id(void)
++{
++#ifdef __amigaos__
++    return 0UL;
++#else
++    return (unsigned long)getuid();
++#endif
++}
+ 
+ #include "ball_system.h"
+ #include "block_system.h"
+@@ -956,6 +967,7 @@
+         return ctx->config.nickname;
+ 
+     /* Try real name from passwd gecos field */
++#ifndef __amigaos__
+     const struct passwd *pw = getpwuid(getuid());
+     if (pw != NULL && pw->pw_gecos != NULL && pw->pw_gecos[0] != '\0')
+     {
+@@ -977,6 +989,7 @@
+         return fullname;
+     }
+ 
++#endif
+     /* Last resort */
+     const char *user = getenv("USER");
+     if (user != NULL && user[0] != '\0')
+@@ -1087,7 +1100,7 @@
+     {
+         highscore_io_result_t gres = highscore_io_insert_global_atomic(
+             global_path, score, (unsigned long)ctx->level_number, game_time, ts,
+-            (unsigned long)getuid(), name, master_text);
++            xboing_user_id(), name, master_text);
+         sys_priv_drop();
+ 
+         /* Refresh in-memory copy on success AND on NOT_RANKED (the
+@@ -1205,7 +1218,7 @@
+             if (sys_priv_global_board_active(ctx->paths.xboing_score_file) &&
+                 !ctx->savegame_restored_session && !ctx->cheated &&
+                 highscore_io_would_be_global_master(&ctx->hs_global, final_score,
+-                                                    (unsigned long)getuid()) &&
++                                                    xboing_user_id()) &&
+                 sdl2_state_push_dialogue(ctx->state) == SDL2ST_OK)
+             {
+                 pending_final_score = final_score;
