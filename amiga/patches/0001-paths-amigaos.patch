@@ -1,0 +1,39 @@
+diff --git a/src/paths.c b/src/paths.c
+index 7d882fa..e5a2002 100644
+--- a/src/paths.c
++++ b/src/paths.c
+@@ -131,7 +131,10 @@ static void parse_data_dirs(paths_config_t *cfg, const char *dirs)
+  */
+ static const char *secure_score_file_env(void)
+ {
+-#if defined(HAVE_SECURE_GETENV)
++#if defined(__amigaos__)
++    /* AmigaOS has no set-id programs and no shared score board. */
++    return NULL;
++#elif defined(HAVE_SECURE_GETENV)
+     return secure_getenv("XBOING_SCORE_FILE");
+ #elif defined(HAVE_ISSETUGID)
+     return issetugid() ? NULL : getenv("XBOING_SCORE_FILE");
+@@ -142,10 +145,22 @@ static const char *secure_score_file_env(void)
+ 
+ paths_status_t paths_init(paths_config_t *cfg)
+ {
++#if defined(__amigaos__)
++    /* GFOS: everything is in the game's drawer.  The data are in
++     * PROGDIR:Data (XBOING_DATA_DIR), the player's scores, saves and
++     * settings in PROGDIR:User.  There is no $HOME or XDG tree, and
++     * XDG_DATA_DIRS is colon-separated, which an AmigaOS path can't be. */
++    paths_status_t st = paths_init_explicit(cfg, "PROGDIR:User", "PROGDIR:User", "PROGDIR:User",
++                                            NULL, getenv("XBOING_LEVELS_DIR"),
++                                            getenv("XBOING_SOUND_DIR"), secure_score_file_env());
++    cfg->xdg_data_dirs_count = 0;
++    return st;
++#else
+     return paths_init_explicit(cfg, getenv("HOME"), getenv("XDG_DATA_HOME"),
+                                getenv("XDG_CONFIG_HOME"), getenv("XDG_DATA_DIRS"),
+                                getenv("XBOING_LEVELS_DIR"), getenv("XBOING_SOUND_DIR"),
+                                secure_score_file_env());
++#endif
+ }
+ 
+ paths_status_t paths_init_explicit(paths_config_t *cfg, const char *home, const char *xdg_data_home,

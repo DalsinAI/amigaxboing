@@ -1,0 +1,6 @@
+# The upstream XBoing the port builds: fetched at this commit by
+# package/build-amiga.sh, never kept in this repository.
+XBOING_URL=https://github.com/jmf-pobox/xboing-c
+XBOING_COMMIT=34e6ea2868d0fd0d20784da281f176530a7e1bae
+XBOING_VERSION=1.0.12
+PORT_VERSION=1.0.12-gfos1

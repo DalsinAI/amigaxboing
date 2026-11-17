@@ -1,0 +1,87 @@
+# XBoing for GFOS (AmigaOS 3.2 with GFOpenUp), 68040/68060 + FPU, on
+# GFOpenUp's SDL 2 (LIBS:GFOpenGPU/SDL2.module; SDL2_image, SDL2_mixer and
+# SDL2_ttf are linked into the program).
+#
+#   make -f amiga/Makefile.amigaos -j4 XB=/path/to/xboing-c [STOVE=/path/to/os32-gcc16-open6]
+#
+# XB is upstream XBoing at the commit package/xboing.lock names, with
+# amiga/patches applied (package/build-amiga.sh fetches and patches it).
+# STOVE is a GFOpenAmigaGCC 16.2.0-open6 stove: its prefix/ has the
+# compiler, the NDK and GFOpenGPU's SDL 2 kit (prefix/m68k-amigaos).
+#
+# Output: build/amigaos/XBoing/ (the drawer: XBoing, Data/ with the
+# pictures, fonts, sounds and levels, User/, ReadMe, Controls, the
+# licences, with GlowIcons), build/amigaos/XBoing.info and Install-XBoing
+# beside them.
+
+XB      ?= ../xboing-c
+STOVE   ?= $(HOME)/AmiCradle/stoves/os32-gcc16-open6
+PREFIX  ?= $(STOVE)/prefix
+SDL2KIT ?= $(PREFIX)/m68k-amigaos
+CC      = $(PREFIX)/bin/m68k-amigaos-gcc
+STRIP   = $(PREFIX)/bin/m68k-amigaos-strip
+CPU     ?= -m68040 -m68881
+# -fno-tree-loop-distribute-patterns: GCC 16's loop miscompile (the kit's
+# sdl2-config gives it for GCC 16 too).
+OPT     ?= -O2 -fomit-frame-pointer -fno-tree-loop-distribute-patterns
+
+VERSION := $(shell sed -n 's/^XBOING_VERSION=//p' package/xboing.lock)
+DEFS    = -D__amigaos__ -DXBOING_DATA_DIR='"PROGDIR:Data"' -DXBOING_VERSION='"$(VERSION)"'
+INC     = -I$(XB)/include -I$(XB)/src -I$(SDL2KIT)/include/SDL2
+CFLAGS  = -noixemul $(OPT) $(CPU) -std=gnu11 $(DEFS) $(INC)
+LDFLAGS = -noixemul $(CPU)
+LIBS    = -L$(SDL2KIT)/lib -lSDL2_ttf -lSDL2_image -lSDL2_mixer -lSDL2 -lm
+
+BUILD   = build/amigaos
+OBJDIR  = $(BUILD)/obj
+OUT     = $(BUILD)/XBoing
+PROG    = XBoing
+
+SRC     = $(wildcard $(XB)/src/*.c)
+OBJS    = $(patsubst $(XB)/src/%.c,$(OBJDIR)/src/%.o,$(SRC)) \
+          $(OBJDIR)/amiga/amiga_start.o $(OBJDIR)/amiga/amiga_compat.o
+
+all: $(OUT)/$(PROG) package
+
+$(BUILD)/$(PROG).debug: $(OBJS)
+	@mkdir -p $(BUILD)
+	$(CC) $(LDFLAGS) -o $@ $(OBJS) $(LIBS)
+
+$(OUT)/$(PROG): $(BUILD)/$(PROG).debug
+	@mkdir -p $(OUT)
+	$(STRIP) -o $@ $<
+
+package: $(OUT)/$(PROG) AMIGA_PORT.md amiga/Licences.txt amiga/Controls
+	mkdir -p $(OUT)/User $(OUT)/Data/images $(OUT)/Data/fonts $(OUT)/Data/sounds $(OUT)/Data/levels
+	cp -R $(XB)/assets/images/. $(OUT)/Data/images/
+	cp $(XB)/assets/fonts/*.ttf $(OUT)/Data/fonts/
+	cp $(XB)/sounds/*.wav $(OUT)/Data/sounds/
+	cp $(XB)/levels/*.data $(OUT)/Data/levels/
+	cp amiga/Controls $(OUT)/Controls
+	cp AMIGA_PORT.md $(OUT)/ReadMe
+	cp $(XB)/LICENSE $(OUT)/LICENSE.txt
+	cp $(XB)/assets/fonts/LICENSE $(OUT)/Data/fonts/LICENSE.txt
+	cp $(XB)/original/COPYRIGHT $(OUT)/COPYRIGHT-1996.txt
+	cp amiga/Licences.txt $(OUT)/Licences.txt
+	mkdir -p $(OUT)/Licences
+	cp $(SDL2KIT)/share/GFOpenGPU-SDK/Licences/SDL2_ttf.txt $(SDL2KIT)/share/GFOpenGPU-SDK/Licences/FreeType-FTL.txt $(OUT)/Licences/
+	cp amiga/icons/XBoing.info amiga/icons/ReadMe.info $(OUT)/
+	for f in LICENSE.txt COPYRIGHT-1996.txt Licences.txt Controls; do \
+	    cp amiga/icons/ReadMe.info $(OUT)/$$f.info; done
+	cp amiga/icons/Data.info $(OUT)/User.info
+	cp amiga/icons/Data.info $(OUT)/Data.info
+	cp amiga/icons/XBoing-drawer.info $(BUILD)/XBoing.info
+	cp amiga/Install-XBoing amiga/Install-XBoing.info $(BUILD)/
+
+$(OBJDIR)/src/%.o: $(XB)/src/%.c $(wildcard $(XB)/include/*.h)
+	@mkdir -p $(dir $@)
+	$(CC) $(CFLAGS) -c -o $@ $<
+
+$(OBJDIR)/amiga/%.o: amiga/%.c
+	@mkdir -p $(dir $@)
+	$(CC) $(CFLAGS) -c -o $@ $<
+
+clean:
+	rm -rf $(BUILD)
+
+.PHONY: all package clean

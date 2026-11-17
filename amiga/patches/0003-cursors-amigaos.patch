@@ -1,0 +1,21 @@
+diff --git a/src/sdl2_cursor.c b/src/sdl2_cursor.c
+index e306c01..01795b7 100644
+--- a/src/sdl2_cursor.c
++++ b/src/sdl2_cursor.c
+@@ -95,7 +95,16 @@ sdl2_cursor_t *sdl2_cursor_create(sdl2_cursor_status_t *status)
+         ctx->cursors[i] = create_custom_cursor((sdl2_cursor_id_t)i);
+         if (ctx->cursors[i] == NULL)
+         {
++#ifdef __amigaos__
++            /* GFOS: SDL2.module's SDL_FreeCursor never returns for a
++             * system cursor (the wait cursor, lab t3-blues-20261104), so
++             * quitting hung. The ids without a bitmap of their own take the
++             * Workbench pointer, SDL's default cursor, which SDL_FreeCursor
++             * leaves alone. */
++            ctx->cursors[i] = SDL_GetDefaultCursor();
++#else
+             ctx->cursors[i] = SDL_CreateSystemCursor(system_cursor_map[i]);
++#endif
+         }
+         if (ctx->cursors[i] == NULL)
+         {

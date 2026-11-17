@@ -1,0 +1,20 @@
+diff --git a/src/game_init.c b/src/game_init.c
+index a403301..22e9540 100644
+--- a/src/game_init.c
++++ b/src/game_init.c
+@@ -341,6 +341,15 @@ game_ctx_t *game_create(int argc, char *argv[])
+ 
+     /* ---- Phase 2: SDL2 platform modules --------------------------------- */
+ 
++#ifdef __amigaos__
++    /* GFOS: SDL2_image.module sends each PNG to the services card's cores
++     * first, one request per picture. XBoing reads about 280 small PNGs at
++     * start-up: the 68040's own decoder reads them all in seconds, the
++     * round trips take minutes when the cores are busy. SetEnv
++     * SDL_IMAGE_DECODER auto still picks the cores. */
++    SDL_SetHint("SDL_IMAGE_DECODER", "cpu");
++#endif
++
+     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_TIMER) != 0)
+     {
+         fprintf(stderr, "SDL_Init failed: %s\n", SDL_GetError());

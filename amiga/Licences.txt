@@ -1,0 +1,17 @@
+XBoing: licences
+================
+
+The game: XBoing by Justin C. Kibell (1993-1997), in the SDL 2 version by
+J Freeman (2025-2026), https://github.com/jmf-pobox/xboing-c.
+
+- The program, its pictures, sounds and levels are under the MIT licence
+  (LICENSE.txt). The 1996 copyright notice is COPYRIGHT-1996.txt.
+- The fonts (Data/fonts) are Liberation Sans, under the SIL Open Font
+  Licence 1.1 (Data/fonts/LICENSE.txt).
+- SDL2_ttf and FreeType are linked into the program: Licences/SDL2_ttf.txt
+  and Licences/FreeType-FTL.txt.
+- The Amiga port's own files (amiga/, AMIGA_PORT.md, package/, tools/,
+  tests/) are MIT, like the game; the GlowIcon art is The AmiCradle
+  Team's own.
+
+The game's data are upstream's own, unchanged.
